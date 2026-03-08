@@ -1,9 +1,11 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
     CursoViewSet,
     CurriculoDisciplinaViewSet,
     CurriculoViewSet,
+    dashboard_overview,
     DisciplinaViewSet,
     DocenteDisciplinaViewSet,
     DocenteViewSet,
@@ -25,4 +27,7 @@ router.register(r'docente-disciplinas', DocenteDisciplinaViewSet, basename='doce
 router.register(r'ppcs', PPCViewSet, basename='ppc')
 router.register(r'documentos-curso', DocumentoCursoViewSet, basename='documento-curso')
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('dashboard/', dashboard_overview, name='dashboard-overview'),
+    *router.urls,
+]

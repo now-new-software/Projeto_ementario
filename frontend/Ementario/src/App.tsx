@@ -1,34 +1,46 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { DashboardPage } from './pages/DashboardPage'
+import { PlaceholderPage } from './pages/PlaceholderPage'
+import { Sidebar } from './components/layout/Sidebar'
+import { navigationItems, type NavigationKey } from './types/navigation'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePage, setActivePage] = useState<NavigationKey>('dashboard')
+
+  const activeItem = navigationItems.find((item) => item.key === activePage)
+  const pageDescriptions: Record<Exclude<NavigationKey, 'dashboard'>, string> = {
+    cursos:
+      'Área para consulta completa, filtros e edição das informações de cursos e disciplinas.',
+    configuracoes:
+      'Espaço para preferências da aplicação, parâmetros da sincronização e acesso de administradores.',
+    'status-api':
+      'Painel com saúde da API, jobs de extração Selenium e monitoramento de integridade dos dados.',
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-shell">
+      <Sidebar activeItem={activePage} onSelect={setActivePage} />
+      <div className="app-area">
+        <header className="app-topbar">
+          <span className="app-topbar__project">APIEmentário</span>
+          <span className="app-topbar__separator">/</span>
+          <span className="app-topbar__context">
+            {activeItem?.label.toLowerCase() ?? 'dashboard'}
+          </span>
+        </header>
+        <main className="app-main">
+          {activePage === 'dashboard' ? (
+            <DashboardPage />
+          ) : (
+            <PlaceholderPage
+              title={activeItem?.label ?? 'Tela'}
+              description={pageDescriptions[activePage as Exclude<NavigationKey, 'dashboard'>]}
+            />
+          )}
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
