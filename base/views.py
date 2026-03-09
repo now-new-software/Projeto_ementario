@@ -37,28 +37,35 @@ def _resolve_activity_status(disciplina: Disciplina) -> str:
     if not disciplina.ementa or not disciplina.programa:
         return 'Desatualizado'
 
-    elapsed_seconds = (disciplina.updated_at - disciplina.created_at).total_seconds()
+    elapsed_seconds = (disciplina.updated_at -
+                       disciplina.created_at).total_seconds()
     if elapsed_seconds > 120:
         return 'Manual'
 
-    return 'Sincronizado'
+    return 'Sincronizado!'
 
 
 @api_view(['GET'])
 def dashboard_overview(_request):
     total_cursos = Curso.objects.count()
-    sincronizados = Curso.objects.filter(funcionamento_curso=Curso.Funcionamento.ATIVO).count()
+    sincronizados = Curso.objects.filter(
+        funcionamento_curso=Curso.Funcionamento.ATIVO).count()
     desatualizados = max(total_cursos - sincronizados, 0)
 
     latest_candidates = [
-        Curso.objects.order_by('-updated_at').values_list('updated_at', flat=True).first(),
-        Disciplina.objects.order_by('-updated_at').values_list('updated_at', flat=True).first(),
-        Curriculo.objects.order_by('-updated_at').values_list('updated_at', flat=True).first(),
+        Curso.objects.order_by(
+            '-updated_at').values_list('updated_at', flat=True).first(),
+        Disciplina.objects.order_by(
+            '-updated_at').values_list('updated_at', flat=True).first(),
+        Curriculo.objects.order_by(
+            '-updated_at').values_list('updated_at', flat=True).first(),
     ]
-    latest_sync = max((value for value in latest_candidates if value is not None), default=None)
+    latest_sync = max(
+        (value for value in latest_candidates if value is not None), default=None)
 
     recent_disciplinas = (
-        Disciplina.objects.select_related('unidade').order_by('-updated_at', '-id_disciplina')[:5]
+        Disciplina.objects.select_related('unidade').order_by(
+            '-updated_at', '-id_disciplina')[:5]
     )
 
     recent_activity = [

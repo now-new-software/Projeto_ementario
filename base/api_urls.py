@@ -15,6 +15,8 @@ from .views import (
     UsuarioViewSet,
 )
 
+
+
 router = DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'docentes', DocenteViewSet, basename='docente')
