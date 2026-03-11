@@ -114,6 +114,7 @@ class Curso(models.Model):
     ato_autorizacao_curso = models.TextField(null=True, blank=True)
     ato_reconhecimento_curso = models.TextField(null=True, blank=True)
     conceito_mec_curso = models.CharField(max_length=50, null=True, blank=True)
+    inserido_manualmente = models.BooleanField(default=False)
     
     coordenador = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, db_column='coordenador_id')
     

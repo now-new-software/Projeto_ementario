@@ -17,6 +17,7 @@ const emptyDashboard: DashboardResponse = {
     total_cursos: 0,
     sincronizados: 0,
     desatualizados: 0,
+    inseridos_manualmente: 0,
   },
   recent_activity: [],
 }
@@ -74,6 +75,11 @@ export function DashboardPage() {
       { label: 'Total de Cursos', value: dashboardData.metrics.total_cursos, tone: 'teal' },
       { label: 'Sincronizados', value: dashboardData.metrics.sincronizados, tone: 'green' },
       { label: 'Desatualizados', value: dashboardData.metrics.desatualizados, tone: 'amber' },
+      {
+        label: 'Inseridos manualmente',
+        value: dashboardData.metrics.inseridos_manualmente,
+        tone: 'violet',
+      },
     ]
   }, [dashboardData.metrics])
 

@@ -13,6 +13,7 @@ export interface DashboardMetrics {
   total_cursos: number
   sincronizados: number
   desatualizados: number
+  inseridos_manualmente: number
 }
 
 export interface DashboardResponse {

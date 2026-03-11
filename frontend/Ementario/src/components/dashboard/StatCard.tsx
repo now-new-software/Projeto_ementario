@@ -1,4 +1,4 @@
-export type StatTone = 'teal' | 'green' | 'amber'
+export type StatTone = 'teal' | 'green' | 'amber' | 'violet'
 
 interface StatCardProps {
   label: string
@@ -23,6 +23,15 @@ function ToneIcon({ tone }: { tone: StatTone }) {
         <path d="M12 4.5 20 19H4z" />
         <path d="M12 9v4.5" />
         <circle cx="12" cy="16.6" r="0.9" />
+      </svg>
+    )
+  }
+
+  if (tone === 'violet') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.5 6.5h9a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z" />
+        <path d="M9 11.5h6" />
       </svg>
     )
   }

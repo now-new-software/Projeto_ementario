@@ -351,6 +351,15 @@
   color: #ee9105;
 }
 
+.stat-card--violet {
+  border-color: #d2c2f6;
+}
+
+.stat-card--violet .stat-card__icon {
+  background: #efe6ff;
+  color: #7b56d8;
+}
+
 .activity-panel {
   border: 1px solid #c8d4e0;
   border-radius: 0.9rem;

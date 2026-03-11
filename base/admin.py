@@ -30,9 +30,18 @@ class UnidadeAdmin(admin.ModelAdmin):
 
 @admin.register(Curso)
 class CursoAdmin(admin.ModelAdmin):
-    list_display = ('id_curso', 'codigo_curso', 'nome_curso', 'nivel_curso', 'turno_curso', 'funcionamento_curso', 'coordenador')
+    list_display = (
+        'id_curso',
+        'codigo_curso',
+        'nome_curso',
+        'nivel_curso',
+        'turno_curso',
+        'funcionamento_curso',
+        'inserido_manualmente',
+        'coordenador',
+    )
     search_fields = ('codigo_curso', 'nome_curso')
-    list_filter = ('nivel_curso', 'turno_curso', 'funcionamento_curso', 'modalidade_curso')
+    list_filter = ('nivel_curso', 'turno_curso', 'funcionamento_curso', 'modalidade_curso', 'inserido_manualmente')
     readonly_fields = ('created_at', 'updated_at')
     autocomplete_fields = ['coordenador']
 

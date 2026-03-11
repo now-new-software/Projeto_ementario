@@ -25,11 +25,6 @@ export function AppLayout() {
     <div className="app-shell">
       <Sidebar />
       <div className="app-area">
-        <header className="app-topbar">
-          <span className="app-topbar__project">APIEmentario</span>
-          <span className="app-topbar__separator">/</span>
-          <span className="app-topbar__context">{topbarContext}</span>
-        </header>
         <main className="app-main">
           <Outlet />
         </main>
