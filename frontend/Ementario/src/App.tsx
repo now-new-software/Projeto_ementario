@@ -3,6 +3,7 @@ import { AppLayout } from './components/layout/AppLayout'
 import { DashboardPage } from './pages/DashboardPage'
 import { PlaceholderPage } from './pages/PlaceholderPage'
 import { navigationItems } from './types/navigation'
+import { CursosPage } from './pages/CursosPage'
 import './App.css'
 
 // Este arquivo define as rotas publicas do front-end.
@@ -14,6 +15,7 @@ function App() {
 
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/cursos" element={<CursosPage />} />
 
         {navigationItems
           .filter((item) => item.key !== 'dashboard')
