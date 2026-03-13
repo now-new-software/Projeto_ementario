@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import (
     Curso,
@@ -49,8 +50,6 @@ def _resolve_activity_status(disciplina: Disciplina) -> str:
 def dashboard_overview(_request):
     total_cursos = Curso.objects.count()
     
-    # ALTERAÇÃO: Usando a query consolidada para verificar se o funcionamento 
-    # foi alterado manualmente pelo usuário
     sincronizados = Curso.objects.consolidados().filter(
         funcionamento_curso_final=Curso.Funcionamento.ATIVO).count()
         
@@ -100,44 +99,56 @@ def dashboard_overview(_request):
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all().order_by('id_usuario')
     serializer_class = UsuarioSerializer
+    filterset_fields = ['cpf_usuario', 'email_usuario']
+    search_fields = ['nome_usuario']
 
 
 class DocenteViewSet(viewsets.ModelViewSet):
     queryset = Docente.objects.all().order_by('id_docente')
     serializer_class = DocenteSerializer
+    filterset_fields = ['titulacao_docente', 'cargo_docente', 'centro_lotacao']
+    search_fields = ['nome_docente', 'email_docente']
 
 
 class UnidadeViewSet(viewsets.ModelViewSet):
     queryset = Unidade.objects.all().order_by('id_unidade')
     serializer_class = UnidadeSerializer
+    filterset_fields = ['campus', 'sigla']
+    search_fields = ['nome_unidade']
 
 
-# --- ALTERAÇÃO NO VIEWSET DO CURSO ---
 class CursoViewSet(viewsets.ModelViewSet):
-    # Passamos a usar 'consolidados()' em vez de 'all()' para carregar as anotações
     queryset = Curso.objects.consolidados().order_by('id_curso')
     serializer_class = CursoSerializer
-# ------------------------------------
+    filterset_fields = ['nivel_curso', 'turno_curso', 'modalidade_curso', 'funcionamento_curso']
+    search_fields = ['nome_curso', 'codigo_curso', 'area_conhecimento_curso']
+    ordering_fields = ['nome_curso', 'created_at']
 
 
 class CurriculoViewSet(viewsets.ModelViewSet):
     queryset = Curriculo.objects.all().order_by('id_curriculo')
     serializer_class = CurriculoSerializer
+    filterset_fields = ['curso', 'status', 'ano_inicio', 'regime_letivo']
 
 
 class DisciplinaViewSet(viewsets.ModelViewSet):
     queryset = Disciplina.objects.all().order_by('id_disciplina')
     serializer_class = DisciplinaSerializer
+    filterset_fields = ['unidade', 'creditos']
+    search_fields = ['nome_disciplina', 'codigo_disciplina', 'ementa']
+    ordering_fields = ['nome_disciplina', 'codigo_disciplina']
 
 
 class CurriculoDisciplinaViewSet(viewsets.ModelViewSet):
     queryset = CurriculoDisciplina.objects.all().order_by('id_curriculo_disciplina')
     serializer_class = CurriculoDisciplinaSerializer
+    filterset_fields = ['curriculo', 'disciplina', 'periodo', 'tipo_disciplina']
 
 
 class DocenteDisciplinaViewSet(viewsets.ModelViewSet):
     queryset = DocenteDisciplina.objects.all().order_by('id_docente_disciplina')
     serializer_class = DocenteDisciplinaSerializer
+    filterset_fields = ['docente', 'disciplina', 'curso', 'ano', 'semestre']
 
 
 class PPCViewSet(viewsets.ModelViewSet):
@@ -148,3 +159,5 @@ class PPCViewSet(viewsets.ModelViewSet):
 class DocumentoCursoViewSet(viewsets.ModelViewSet):
     queryset = DocumentoCurso.objects.all().order_by('id_documento')
     serializer_class = DocumentoCursoSerializer
+    filterset_fields = ['curso', 'tipo_documento']
+    search_fields = ['titulo']
