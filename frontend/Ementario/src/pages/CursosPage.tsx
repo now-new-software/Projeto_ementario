@@ -1,56 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Search, Plus, Pencil } from 'lucide-react';
-import api from '../services/api';
-import type { Curso } from '../types/curso.ts';
 
-
-interface CourseRow {
-  id: string
-  code: string
-  name: string
-  department: string
-  credits: number
-  hours: number
-  status: 'Sincronizado' | 'Desatualizado' | 'Manual'
-  type: 'Graduação' | 'Pós-Graduação'
-}
+// Mock data matching the image
+const coursesData = [];
 
 export const CursosPage = () => {
-  const [courses, setCourses] = useState<Curso[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await api.get('/cursos/');
-        // DRF com DefaultRouter e paginação padrão retorna { count, next, previous, results }
-        // Se a paginação estiver desativada ou for o formato simples, pode ser direto o array.
-        // No settings.py está: 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 'PAGE_SIZE': 20
-        setCourses(response.data.results || response.data);
-      } catch (error) {
-        console.error('Erro ao buscar cursos:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, []);
-
-  const coursesData: CourseRow[] = courses.map(c => ({
-    id: c.id_curso.toString(),
-    code: c.codigo_curso,
-    name: c.nome_curso,
-    department: c.area_conhecimento_curso || 'N/A',
-    credits: 0, // Informação não disponível no modelo Curso diretamente
-    hours: 0,   // Informação não disponível no modelo Curso diretamente
-    status: c.inserido_manualmente ? 'Manual' : (c.funcionamento_curso === 'Em atividade' ? 'Sincronizado' : 'Desatualizado'),
-    type: c.nivel_curso
-  }));
 
   const filteredCourses = coursesData.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) || course.code.toLowerCase().includes(searchTerm.toLowerCase());
@@ -74,20 +32,31 @@ export const CursosPage = () => {
   };
 
   return (
-    <div className="p-8 font-sans text-gray-800 w-full">
-      <div className="w-full">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Cursos</h1>
-          <button className="flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md font-medium transition-colors">
-            <Plus className="w-4 h-4" />
-            Novo Curso
-        </button>
+    // 1. Usamos a exata mesma section principal do Dashboard
+    <section className="dashboard"> 
+      
+      {/* 2. Usamos o exato mesmo cabeçalho do Dashboard */}
+      <header className="dashboard__header">
+        <div>
+          {/* Como estamos usando a estrutura deles, este <h1> vai herdar o tamanho perfeito automaticamente! */}
+          <h1>Cursos</h1> 
         </div>
+        
+        {/* Mantemos o seu botão de Novo Curso (com a cor que padronizamos) */}
+      {/* Mantemos o flex e o gap-2 para o ícone de + não desalinhar, e adicionamos o sync-button */}
+      <button className="sync-button flex items-center gap-2">
+        <Plus className="w-4 h-4" />
+        Novo Curso
+      </button>
+      </header>
 
-        {/* Filters Panel */}
+      {/* 3. A partir daqui, voltamos para o seu código Tailwind para a Tabela e Filtros */}
+      <div className="w-full mt-4"> 
+        
+        {/* Filters Panel (Cole o seu código de filtros aqui para baixo) */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="relative flex-1 bg-white rounded-md border border-gray-200">
+          <div className="relative flex-1 bg-white rounded-xl border border-gray-200">
+            {/* ... resto do seu código ... */}
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
             </div>
@@ -108,8 +77,8 @@ export const CursosPage = () => {
               onChange={(e) => setDepartmentFilter(e.target.value)}
             >
               <option value="">Todos departamentos</option>
-              <option value=""></option>
-              <option value=""></option>
+              {/* <option value=""></option>
+              <option value=""></option> */}
             </select>
 
             <select 
@@ -208,8 +177,9 @@ export const CursosPage = () => {
             <p className="text-sm mt-1">A lista está vazia ou nenhum curso corresponde aos filtros.</p>
           </div>
         )}
+
         </div>
       </div>
-    </div>
+    </section>
   );
 }
